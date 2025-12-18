@@ -296,8 +296,8 @@ mk_fslist "${SRC_DEV}" "$TEMP/partable" > "$TEMP/fslist"
 mkscript_fdisk "${FINAL_DEV}" "$TEMP/partable" > "${CLEARFS_FILE}"
 mkscript_fs "$TEMP/fslist" "${mmc_part_prefix}" >> "${CLEARFS_FILE}"
 
-mkscript_fdisk "${RESTORE_DEV}" "$TEMP/partable" > "$DST_DIR/restore.sh"
-mkscript_fs "$TEMP/fslist" '${part_prefix}' >> "$DST_DIR/restore.sh"
+mkscript_fdisk "${RESTORE_DEV}" "$TEMP/partable" > "$DST_DIR/swu2rpiboot.sh"
+mkscript_fs "$TEMP/fslist" '${part_prefix}' >> "$DST_DIR/swu2rpiboot.sh"
 
 #### create archive file list and archive description
 : > "$TEMP/archive.description"
@@ -319,7 +319,7 @@ for def in ${volumes}; do
         filename=$(basename "$i.${CPIO_EXT}")
         mkdescr_cpio "$filename" "$dest_dev" "$fstype" >> "$TEMP/archive.description"
         echo "${filename}" >> "${ARCHIVE_FILES}"
-        mkscript_cpio "$filename" "$dev" >> "$DST_DIR/restore.sh"
+        mkscript_cpio "$filename" "$dev" >> "$DST_DIR/swu2rpiboot.sh"
     done
     volname=$((volname + 1))
 done
@@ -379,4 +379,4 @@ software =
 EOF
 
 $cpio_with_crc -ov -H crc -L -R 0:0 <"$ARCHIVE_FILES" >archive.swu 2>/dev/null
-chmod +x "$DST_DIR/restore.sh"
+chmod +x "$DST_DIR/swu2rpiboot.sh"
